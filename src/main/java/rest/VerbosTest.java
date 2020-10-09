@@ -3,8 +3,13 @@ package rest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import javafx.application.Application;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.jws.soap.SOAPBinding;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -26,6 +31,65 @@ public class VerbosTest {
                 .statusCode(201)
                 .body("id",is(notNullValue()))
                 .body("name", is("Jose"));
+
+    }
+
+    @Test
+    public void deveSalvarUsuarioUsandoMap(){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", "usuario via map");
+        params.put("age", 28);
+
+        given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when()
+                .post("http://restapi.wcaquino.me/users")
+                .then()
+                .log().all()
+                .statusCode(201)
+                .body("id",is(notNullValue()))
+                .body("name", is("usuario via map"))
+                .body("age", is(28));
+    }
+
+    @Test
+    public void deveSalvarUsuarioUsandoObjeto(){
+        User user = new User("Usuario via objeto", 35);
+
+        given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("http://restapi.wcaquino.me/users")
+                .then()
+                .log().all()
+                .statusCode(201)
+                .body("id",is(notNullValue()))
+                .body("name", is("Usuario via objeto"))
+                .body("age", is(35));
+    }
+
+    @Test
+    public void deveDeserializarObjetoAoSalvarUsuario(){
+        User user = new User("Usuario desserializado", 35);
+
+       User usuarioInserido = given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("http://restapi.wcaquino.me/users")
+                .then()
+                .log().all()
+                .statusCode(201)
+                .extract().body().as(User.class);
+
+       Assert.assertThat(usuarioInserido.getId(), notNullValue());
+        Assert.assertEquals("Usuario desserializado", usuarioInserido.getName());
+        Assert.assertThat(usuarioInserido.getAge(), is(35));
 
     }
 
