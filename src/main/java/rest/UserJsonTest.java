@@ -2,11 +2,13 @@ package rest;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.Method;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -17,9 +19,14 @@ import java.util.Arrays;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.responseSpecification;
 import static org.hamcrest.Matchers.*;
 
 public class UserJsonTest {
+
+    public static RequestSpecification requestSpecification;
+    public static ResponseSpecification responseSpecification;
+
 
     @BeforeClass
     public static void setup(){
@@ -31,7 +38,11 @@ public class UserJsonTest {
 
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         requestSpecBuilder.log(LogDetail.ALL);
-        RequestSpecification requestSpecification = requestSpecBuilder.build();
+        requestSpecification = requestSpecBuilder.build();
+
+        ResponseSpecBuilder responseSpecBuilder = new ResponseSpecBuilder();
+        responseSpecBuilder.expectStatusCode(200);
+        responseSpecification = responseSpecBuilder.build();
 
 
         given()
@@ -39,7 +50,8 @@ public class UserJsonTest {
                 .when()
                 .get("/users/1")
                 .then()
-        .statusCode(200)
+        //.statusCode(200)
+                .spec(responseSpecification)
         .body("id", is(1))
         .body("name", containsString("Silva"))
         .body("age", greaterThan(18))
