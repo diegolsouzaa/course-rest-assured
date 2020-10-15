@@ -17,7 +17,6 @@ import static org.hamcrest.Matchers.*;
 
 public class VerbosTest {
 
-
     @Test
     public void deveSalvarUsuario(){
         given()
@@ -31,7 +30,6 @@ public class VerbosTest {
                 .statusCode(201)
                 .body("id",is(notNullValue()))
                 .body("name", is("Jose"));
-
     }
 
     @Test
@@ -90,7 +88,6 @@ public class VerbosTest {
        Assert.assertThat(usuarioInserido.getId(), notNullValue());
         Assert.assertEquals("Usuario desserializado", usuarioInserido.getName());
         Assert.assertThat(usuarioInserido.getAge(), is(35));
-
     }
 
     @Test

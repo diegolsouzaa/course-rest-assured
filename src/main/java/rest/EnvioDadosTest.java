@@ -17,8 +17,7 @@ public class EnvioDadosTest {
                 .then()
                 .log().all()
         .statusCode(200)
-        .contentType(ContentType.JSON)
-                ;
+        .contentType(ContentType.JSON);
     }
 
     @Test
@@ -33,8 +32,7 @@ public class EnvioDadosTest {
                 .log().all()
                 .statusCode(200)
                 .contentType(ContentType.XML)
-                .contentType(Matchers.containsString("utf-8"))
-        ;
+                .contentType(Matchers.containsString("utf-8"));
     }
 
     @Test
@@ -47,8 +45,6 @@ public class EnvioDadosTest {
                 .then()
                 .log().all()
                 .statusCode(200)
-                .contentType(ContentType.JSON)
-
-        ;
+                .contentType(ContentType.JSON);
     }
 }
