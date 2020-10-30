@@ -20,4 +20,78 @@ public class AuthTest {
                 .body("name", Matchers.is("Luke Skywalker"))
                 ;
     }
+
+    // ed7197b35fedbbdcbcd5bb3a12e1ddb5
+    // http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=ed7197b35fedbbdcbcd5bb3a12e1ddb5&units=metric
+
+    @Test
+    public void deveObterClima(){
+        given()
+                .log().all()
+                .queryParam("q", "austin")
+                .queryParam("appid", "ed7197b35fedbbdcbcd5bb3a12e1ddb5")
+                .queryParam("units", "metric")
+                .when()
+                .get("http://api.openweathermap.org/data/2.5/weather")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", Matchers.is("Austin"))
+                .body("coord.lon", Matchers.is(-97.74f))
+                .body("main.temp", Matchers.notNullValue())
+        ;
+    }
+
+    @Test
+    public void naoDeveAcessarSemSenha(){
+        given()
+                .log().all()
+                .when()
+                .get("http://restapi.wcaquino.me/basicauth")
+                .then()
+                .log().all()
+                .statusCode(401)
+        ;
+    }
+
+    @Test
+    public void deveFazerAutenticacaoBasica(){
+        given()
+                .log().all()
+                .when()
+                .get("http://admin:senha@restapi.wcaquino.me/basicauth")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("status", Matchers.is("logado"))
+        ;
+    }
+
+    @Test
+    public void deveFazerAutenticacaoBasica2(){
+        given()
+                .log().all()
+                .auth().basic("admin", "senha")
+                .when()
+                .get("http://restapi.wcaquino.me/basicauth")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("status", Matchers.is("logado"))
+        ;
+    }
+
+    @Test
+    public void deveFazerAutenticacaoBasicaChallenge(){
+        given()
+                .log().all()
+                .auth().preemptive().basic("admin", "senha")
+                .when()
+                .get("http://restapi.wcaquino.me/basicauth2")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("status", Matchers.is("logado"))
+        ;
+    }
 }
