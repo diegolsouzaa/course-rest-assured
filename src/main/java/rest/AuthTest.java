@@ -21,15 +21,13 @@ public class AuthTest {
                 ;
     }
 
-    // ed7197b35fedbbdcbcd5bb3a12e1ddb5
-    // http://api.openweathermap.org/data/2.5/weather?q=dallas&appid=ed7197b35fedbbdcbcd5bb3a12e1ddb5&units=metric
-
+    // para obter o appid, logar na pagina openweathermap.org/
     @Test
     public void deveObterClima(){
         given()
                 .log().all()
                 .queryParam("q", "austin")
-                .queryParam("appid", "ed7197b35fedbbdcbcd5bb3a12e1ddb5")
+                .queryParam("appid", "")
                 .queryParam("units", "metric")
                 .when()
                 .get("http://api.openweathermap.org/data/2.5/weather")
